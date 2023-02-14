@@ -6,6 +6,7 @@ import ErrorPage from "./ErrorPage";
 import Login from "./routes/Login";
 import SignUp from "./routes/SignUp";
 import ForgotPassword from "./routes/ForgotPassword";
+import ResetPassword from "./routes/ResetPassword";
 
 const router = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
   {
     path: "forgot-password",
     element: <ForgotPassword />,
+  },
+  {
+    path: "reset-password",
+    element: <ResetPassword />,
   },
 ]);
 
