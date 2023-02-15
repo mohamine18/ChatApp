@@ -1,7 +1,5 @@
-import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
 import ContactInfo from "./ContactInfo";
-
-import ContactSearchBar from "./ContactSearchBar";
 
 type propsType = {
   show: boolean;
@@ -9,15 +7,15 @@ type propsType = {
 
 const ContactList = (props: propsType) => {
   return (
-    <Grid
-      item
-      xs={12}
-      sm={12}
-      md={5}
-      lg={4}
+    <Box
+      component="div"
       display={{ xs: props.show ? "block" : "none", md: "block", lg: "block" }}
+      sx={{
+        width: { xs: "100%", sm: "100%", md: "40%" },
+        height: "90vh",
+        overflowY: { md: "auto" },
+      }}
     >
-      <ContactSearchBar />
       <ContactInfo />
       <ContactInfo />
       <ContactInfo />
@@ -34,7 +32,7 @@ const ContactList = (props: propsType) => {
       <ContactInfo />
       <ContactInfo />
       <ContactInfo />
-    </Grid>
+    </Box>
   );
 };
 

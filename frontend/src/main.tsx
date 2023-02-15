@@ -8,6 +8,8 @@ import SignUp from "./routes/SignUp";
 import ForgotPassword from "./routes/ForgotPassword";
 import ResetPassword from "./routes/ResetPassword";
 
+import "./main.module.css";
+
 const router = createBrowserRouter([
   {
     path: "/",

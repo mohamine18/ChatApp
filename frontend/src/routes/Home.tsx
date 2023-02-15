@@ -5,11 +5,11 @@ import { ThemeProvider } from "@mui/material";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
-import Grid from "@mui/material/Grid";
 
 import theme from "../Theme";
-import ContactList from "../components/ContactList";
-import MessagesArea from "../components/MessagesArea";
+import ContactList from "../components/Contacts/ContactList";
+import MessagesArea from "../components/Messages Area/MessagesArea";
+import ChatAppBar from "../components/App Bar/ChatAppBar";
 
 const App = () => {
   const [isActive, setIsActive] = useState(true);
@@ -18,17 +18,13 @@ const App = () => {
     <>
       {isActive ? (
         <ThemeProvider theme={theme}>
-          <Container
-            component="main"
-            maxWidth="lg"
-            fixed
-            sx={{ height: "100vh", overflow: "auto" }}
-          >
+          <Container component="main" maxWidth="lg">
             <CssBaseline />
-            <Grid container spacing={1}>
+            <ChatAppBar show={showArea} />
+            <Box component="div" sx={{ display: "flex", flexBasis: "100%" }}>
               <ContactList show={!showArea} />
               <MessagesArea show={showArea} />
-            </Grid>
+            </Box>
           </Container>
         </ThemeProvider>
       ) : (
