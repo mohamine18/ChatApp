@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Outlet, Navigate } from "react-router-dom";
+import { useState, useContext } from "react";
+import { Navigate } from "react-router-dom";
 
 import { ThemeProvider } from "@mui/material";
 import Container from "@mui/material/Container";
@@ -11,17 +11,19 @@ import ContactList from "../components/Contacts/ContactList";
 import MessagesArea from "../components/Messages Area/MessagesArea";
 import ChatAppBar from "../components/App Bar/ChatAppBar";
 
+import MainContextProvider, { MainContext } from "../context/MainContext";
+
 const App = () => {
-  const [isActive, setIsActive] = useState(true);
   const [showArea, setShowArea] = useState(false);
+  const { isActive, setIsActive } = useContext(MainContext);
   return (
-    <>
+    <MainContextProvider>
       {isActive ? (
         <ThemeProvider theme={theme}>
-          <Container component="main" maxWidth="lg">
+          <Container component="main" maxWidth="lg" disableGutters={true}>
             <CssBaseline />
             <ChatAppBar show={showArea} />
-            <Box component="div" sx={{ display: "flex", flexBasis: "100%" }}>
+            <Box component="div" sx={{ display: "flex" }}>
               <ContactList show={!showArea} />
               <MessagesArea show={showArea} />
             </Box>
@@ -30,7 +32,7 @@ const App = () => {
       ) : (
         <Navigate to={`login`} replace={true} />
       )}
-    </>
+    </MainContextProvider>
   );
 };
 
