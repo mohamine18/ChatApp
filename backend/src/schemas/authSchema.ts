@@ -39,13 +39,10 @@ export const logInSchema = z.object({
       invalid_type_error: 'Email must be string',
     })
     .email({ message: 'Invalid email address' }),
-  password: z
-    .string({
-      required_error: 'password is required',
-      invalid_type_error: 'password must be a string',
-    })
-    .min(6, { message: 'Must be 6 or more characters long' })
-    .max(16, { message: 'Must be 16 or fewer characters long' }),
+  password: z.string({
+    required_error: 'password is required',
+    invalid_type_error: 'password must be a string',
+  }),
 });
 
 export type logInType = z.infer<typeof logInSchema>;

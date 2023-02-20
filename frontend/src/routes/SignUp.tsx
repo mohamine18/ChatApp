@@ -11,7 +11,7 @@ import Typography from "@mui/material/Typography";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 
-import theme from "../Theme";
+import theme from "../theme/Theme";
 
 const SignUp = () => {
   const submitHandler = (event: React.FormEvent<HTMLFormElement>) => {

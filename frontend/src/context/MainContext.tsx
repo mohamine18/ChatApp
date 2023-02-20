@@ -6,18 +6,24 @@ type propsTypes = {
 
 type mainContextType = {
   isActive: boolean;
-  setIsActive?: React.Dispatch<React.SetStateAction<boolean>>;
+  toggleActive: () => void;
 };
+const token = localStorage.getItem("token");
 
 export const MainContext = React.createContext<mainContextType>({
-  isActive: true,
+  isActive: token ? true : false,
+  toggleActive: () => {},
 });
 
 const MainContextProvider = (props: propsTypes) => {
-  const [isActive, setIsActive] = useState(true);
-
+  const token = localStorage.getItem("token");
+  console.log(token);
+  const [isActive, setIsActive] = useState(() => (token ? true : false));
+  const toggleActive = () => {
+    setIsActive((prevValue) => !prevValue);
+  };
   return (
-    <MainContext.Provider value={{ isActive, setIsActive }}>
+    <MainContext.Provider value={{ isActive, toggleActive }}>
       {props.children}
     </MainContext.Provider>
   );

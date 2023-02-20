@@ -1,6 +1,7 @@
 //Modules import
 import express, { NextFunction, Request, Response } from 'express';
 import morgan from 'morgan';
+import cors from 'cors';
 
 //Routes import
 import authRouter from './routes/authRoutes';
@@ -14,6 +15,18 @@ const app = express();
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
+
+// cors options
+const option = {
+  origin: [
+    'http://localhost:5173',
+    'http://192.168.1.110:5173',
+    'http://192.168.32.1:5173',
+  ],
+  optionsSuccessStatus: 200,
+};
+
+app.use('*', cors(option));
 
 app.use(express.json({ limit: '10kb' }));
 

@@ -13,7 +13,7 @@ import Grid from "@mui/material/Grid";
 import isEmail from "validator/lib/isEmail";
 import isEmpty from "validator/lib/isEmpty";
 
-import Theme from "../Theme";
+import Theme from "../theme/Theme";
 
 const ForgotPassword = () => {
   const [noEmpty, setNoEmpty] = useState(true);

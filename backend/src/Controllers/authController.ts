@@ -83,7 +83,7 @@ export const logIn: RequestHandler = catchAsync(async (req, res, next) => {
     return next(new AppError('User do not exist please sing up', 403));
   const matchPassword = await existUser.checkPassword(userData.password);
   if (!matchPassword)
-    return next(new AppError('Wrong password please try again', 403));
+    return next(new AppError('Wrong password please retry', 403));
 
   // create the token and send it back to the user
   const userId = existUser._id.toString();

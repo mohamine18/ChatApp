@@ -1,6 +1,9 @@
+// Modules import
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+//Routes import
 import Home from "./routes/Home";
 import ErrorPage from "./ErrorPage";
 import Login from "./routes/Login";
@@ -9,6 +12,7 @@ import ForgotPassword from "./routes/ForgotPassword";
 import ResetPassword from "./routes/ResetPassword";
 
 import "./main.module.css";
+import MainContextProvider from "./context/MainContext";
 
 const router = createBrowserRouter([
   {
@@ -40,8 +44,14 @@ const router = createBrowserRouter([
   },
 ]);
 
+const queryClient = new QueryClient();
+
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <QueryClientProvider client={queryClient}>
+      <MainContextProvider>
+        <RouterProvider router={router} />
+      </MainContextProvider>
+    </QueryClientProvider>
   </React.StrictMode>
 );

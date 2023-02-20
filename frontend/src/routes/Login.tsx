@@ -1,4 +1,10 @@
+// Modules imports
+import { useState, useContext } from "react";
 import { Link as RouterLink } from "react-router-dom";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+
+// MUI imports
 import { ThemeProvider } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
@@ -10,19 +16,58 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import CircularProgress from "@mui/material/CircularProgress";
+import Alert from "@mui/material/Alert";
+import Stack from "@mui/material/Stack";
 
-import theme from "../Theme";
+// Theme import
+import theme from "../theme/Theme";
+
+// Utils imports
+import { loginFn } from "../utils/authUtilities";
+
+// context imports
+import { MainContext } from "../context/MainContext";
+
+type error = { path: Array<string>; message: string };
+const errorsInit: error[] = [];
 
 const Login = () => {
+  const [isError, setIsError] = useState(false);
+  const [errors, setErrors] = useState(errorsInit);
+  const { isActive, toggleActive } = useContext(MainContext);
+  const navigate = useNavigate();
+  const authMutateQuery = useMutation({
+    mutationFn: (data) => loginFn(data),
+    onSuccess: (data) => {
+      console.log(data);
+      if (data.status === 400) {
+        setIsError(true);
+        setErrors(data.error.details);
+      }
+      if (data.status === 403) {
+        setIsError(true);
+        setErrors([{ path: ["error"], message: data.error.message }]);
+      }
+      if (data.status === 200) {
+        localStorage.setItem("token", data.token);
+        console.log("here");
+        return navigate("/");
+      }
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
   const submitHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const data = {
-      email: formData.get("email"),
-      password: formData.get("password"),
+      email: formData.get("email")!.toString(),
+      password: formData.get("password")!.toString(),
       remember: formData.get("remember") ? true : false,
     };
-    console.log(data);
+    authMutateQuery.mutate(data as any);
   };
   return (
     <ThemeProvider theme={theme}>
@@ -44,6 +89,15 @@ const Login = () => {
           <Typography component="h1" variant="h3" color="primary">
             Sign In
           </Typography>
+          <Stack spacing={0} sx={{ margin: 1 }}>
+            {errors.map((err, index) => {
+              return (
+                <Alert key={index} variant="outlined" severity="error">
+                  {`${err.path[0]}: ${err.message}`}
+                </Alert>
+              );
+            })}
+          </Stack>
           <Box
             component="form"
             noValidate
@@ -82,14 +136,20 @@ const Login = () => {
               }
               label="Remember me"
             ></FormControlLabel>
+
             <Button
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign In
+              {authMutateQuery.isLoading ? (
+                <CircularProgress color="secondary" />
+              ) : (
+                `Sign In`
+              )}
             </Button>
+
             <Grid container>
               <Grid item xs>
                 <RouterLink to="/forgot-password">
