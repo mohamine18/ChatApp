@@ -15,11 +15,11 @@ import { MainContext } from "../context/MainContext";
 
 const App = () => {
   const [showArea, setShowArea] = useState(false);
-  const { isActive, toggleActive } = useContext(MainContext);
-  console.log(isActive);
+  const authContext = useContext(MainContext);
+  console.log("from home " + authContext.isLoggedIn);
   return (
     <>
-      {isActive ? (
+      {authContext.isLoggedIn ? (
         <ThemeProvider theme={theme}>
           <Container component="main" maxWidth="lg" disableGutters={true}>
             <CssBaseline />

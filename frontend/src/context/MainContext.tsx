@@ -1,30 +1,58 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 
 type propsTypes = {
   children: React.ReactNode;
 };
 
 type mainContextType = {
-  isActive: boolean;
-  toggleActive: () => void;
+  isLoggedIn: boolean;
+  user: null;
+  login: (token: string, fetchedUser: any) => void;
+  logout: () => void;
 };
-const token = localStorage.getItem("token");
 
 export const MainContext = React.createContext<mainContextType>({
-  isActive: token ? true : false,
-  toggleActive: () => {},
+  isLoggedIn: false,
+  user: null,
+  login: () => {},
+  logout: () => {},
 });
 
 const MainContextProvider = (props: propsTypes) => {
-  const token = localStorage.getItem("token");
-  console.log(token);
-  const [isActive, setIsActive] = useState(() => (token ? true : false));
-  const toggleActive = () => {
-    setIsActive((prevValue) => !prevValue);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("user") || "null");
+    console.log(storedUser);
+
+    if (storedUser && storedUser.isLoggedIn) {
+      setIsLoggedIn(true);
+      setUser(storedUser.user);
+    }
+    setIsLoaded(true);
+  }, []);
+
+  const login = (token: string, fetchedUser: any) => {
+    localStorage.setItem("token", token);
+    setIsLoggedIn(true);
+    setUser(fetchedUser);
+    localStorage.setItem(
+      "user",
+      JSON.stringify({ isLoggedIn: true, user: fetchedUser })
+    );
   };
+
+  const logout = () => {
+    localStorage.removeItem("user");
+    setIsLoggedIn(false);
+    setUser(null);
+  };
+
   return (
-    <MainContext.Provider value={{ isActive, toggleActive }}>
-      {props.children}
+    <MainContext.Provider value={{ isLoggedIn, login, logout, user }}>
+      {isLoaded && props.children}
     </MainContext.Provider>
   );
 };

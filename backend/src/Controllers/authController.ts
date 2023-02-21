@@ -30,18 +30,20 @@ const signToken = (userId: string) => {
 };
 
 const createSendToken = (
-  userId: string,
+  user: any,
   statusCode: number,
   req: Request,
   res: Response
 ) => {
   // sign the token
+  const userId = user._id.toString();
   const token = signToken(userId);
   // send the token back to the user
   return res.status(statusCode).json({
     status: statusCode,
     statusCode: HTTP_CODES[statusCode],
     token,
+    user,
   });
 };
 
@@ -64,9 +66,14 @@ export const singUp: RequestHandler = catchAsync(async (req, res, next) => {
     password: userData.password,
   });
 
+  const user = {
+    _id: newUser._id,
+    firstName: newUser.firstName,
+    lastName: newUser.lastName,
+    email: newUser.email,
+  };
   // create the token and send it back to the user
-  const userId = newUser._id.toString();
-  createSendToken(userId, 201, req, res);
+  createSendToken(user, 201, req, res);
 });
 
 export const logIn: RequestHandler = catchAsync(async (req, res, next) => {
@@ -85,9 +92,11 @@ export const logIn: RequestHandler = catchAsync(async (req, res, next) => {
   if (!matchPassword)
     return next(new AppError('Wrong password please retry', 403));
 
-  // create the token and send it back to the user
-  const userId = existUser._id.toString();
-  createSendToken(userId, 200, req, res);
+  const user = await User.findOne({ email: userData.email }).select(
+    'firstName lastName _id email'
+  );
+
+  createSendToken(user, 200, req, res);
 });
 
 export const forgotPassword: RequestHandler = catchAsync(
