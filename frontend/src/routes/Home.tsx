@@ -16,7 +16,6 @@ import { MainContext } from "../context/MainContext";
 const App = () => {
   const [showArea, setShowArea] = useState(false);
   const authContext = useContext(MainContext);
-  console.log("from home " + authContext.isLoggedIn);
   return (
     <>
       {authContext.isLoggedIn ? (

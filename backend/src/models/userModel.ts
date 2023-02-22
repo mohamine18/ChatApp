@@ -2,15 +2,23 @@ import mongoose, { Model } from 'mongoose';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 
-interface IUser {
+export interface contactType {
+  userId: mongoose.Types.ObjectId;
+  fullName: string;
+  email: string;
+}
+
+export interface IUser {
+  _id: mongoose.Types.ObjectId;
   firstName: string;
   lastName: string;
   email: string;
   password: string;
   avatar?: string;
-  passwordChangAt: Date;
+  passwordChangAt?: Date;
   passwordResetToken?: string;
   passwordResetExpires?: Date;
+  contacts?: contactType[];
 }
 
 interface iUserMethods {
@@ -45,6 +53,13 @@ const userSchema = new mongoose.Schema<IUser, UserModel, iUserMethods>(
     passwordChangAt: Date,
     passwordResetToken: String,
     passwordResetExpires: Date,
+    contacts: [
+      {
+        userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+        fullName: { type: String, required: true },
+        email: { type: String, required: true },
+      },
+    ],
   },
   { timestamps: true }
 );

@@ -1,6 +1,6 @@
 // Modules import
 import { RequestHandler, Request, Response } from 'express';
-import jwt from 'jsonwebtoken';
+import jwt, { Secret } from 'jsonwebtoken';
 import crypto from 'crypto';
 
 // Schemas import
@@ -16,7 +16,7 @@ import {
 } from '../schemas/authSchema';
 
 // Models import
-import User from '../models/userModel';
+import User, { IUser } from '../models/userModel';
 
 // Utils import
 import AppError from '../utils/appError';
@@ -24,7 +24,7 @@ import catchAsync from '../utils/catchAsync';
 import HTTP_CODES from '../utils/httpCodes';
 
 const signToken = (userId: string) => {
-  return jwt.sign({ userId }, process.env.JWT_SECRET as string, {
+  return jwt.sign({ userId }, process.env.JWT_SECRET as Secret, {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 };
@@ -167,5 +167,51 @@ export const resetPassword: RequestHandler = catchAsync(
     // send back the token
     const userId = existUser._id.toString();
     createSendToken(userId, 200, req, res);
+  }
+);
+
+interface myToken {
+  userId: string;
+  iat: number;
+  exp: number;
+}
+
+export interface IRequest extends Request {
+  user?: IUser;
+}
+
+export const verifyToken: RequestHandler = catchAsync(
+  async (req: IRequest, res, next) => {
+    let token;
+    if (
+      req.headers.authorization &&
+      req.headers.authorization.startsWith('Bearer')
+    )
+      token = req.headers.authorization.split(' ')[1];
+
+    if (!token)
+      return next(
+        new AppError('You are not logged in! Please log in to get access.', 401)
+      );
+
+    const decoded = <myToken>(
+      jwt.verify(token, process.env.JWT_SECRET as Secret)
+    );
+
+    const currentUser = await User.findById(decoded.userId).select(
+      'firstName lastName email contacts'
+    );
+    if (!currentUser) {
+      return next(
+        new AppError(
+          'The user belonging to this token does no longer exist.',
+          401
+        )
+      );
+    }
+
+    req.user = currentUser;
+
+    next();
   }
 );

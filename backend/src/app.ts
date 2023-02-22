@@ -5,6 +5,10 @@ import cors from 'cors';
 
 //Routes import
 import authRouter from './routes/authRoutes';
+import contactRouter from './routes/contactRoutes';
+import messageRouter from './routes/messageRoutes';
+
+// Utils imports
 import AppError from './utils/appError';
 
 //Controllers import
@@ -31,6 +35,8 @@ app.use('*', cors(option));
 app.use(express.json({ limit: '10kb' }));
 
 app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/contact', contactRouter);
+app.use('/api/v1/conversation', messageRouter);
 app.use('*', (req: Request, res: Response, next: NextFunction) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
 });
