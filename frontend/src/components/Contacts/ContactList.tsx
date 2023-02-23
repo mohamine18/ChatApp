@@ -1,11 +1,39 @@
+// modules imports
+import { useContext } from "react";
+import { useQuery } from "@tanstack/react-query";
+
+// MUI imports
 import Box from "@mui/material/Box";
+import CircularProgress from "@mui/material/CircularProgress";
+
+//Component imports
 import ContactInfo from "./ContactInfo";
+
+// context import
+import { MainContext } from "../../context/MainContext";
+
+// utils imports
+import { getContacts } from "../../utils/contactFetch";
+import { flexbox } from "@mui/system";
 
 type propsType = {
   show: boolean;
 };
 
+type contactType = {
+  userId: string;
+  fullName: string;
+  email: string;
+  _id: string;
+};
+
 const ContactList = (props: propsType) => {
+  const { token } = useContext(MainContext);
+  const contactsQuery = useQuery({
+    queryKey: ["contacts", token],
+    queryFn: () => getContacts(token!),
+  });
+
   return (
     <Box
       component="div"
@@ -16,22 +44,22 @@ const ContactList = (props: propsType) => {
         overflowY: { md: "auto" },
       }}
     >
-      <ContactInfo />
-      <ContactInfo />
-      <ContactInfo />
-      <ContactInfo />
-      <ContactInfo />
-      <ContactInfo />
-      <ContactInfo />
-      <ContactInfo />
-      <ContactInfo />
-      <ContactInfo />
-      <ContactInfo />
-      <ContactInfo />
-      <ContactInfo />
-      <ContactInfo />
-      <ContactInfo />
-      <ContactInfo />
+      {contactsQuery.isLoading && (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            marginTop: "3rem",
+          }}
+        >
+          <CircularProgress color="primary" />
+        </Box>
+      )}
+      {!contactsQuery.isLoading &&
+        contactsQuery.data.data.contacts.map((contact: contactType) => (
+          <ContactInfo contact={contact} key={contact._id}></ContactInfo>
+        ))}
     </Box>
   );
 };

@@ -99,6 +99,6 @@ export const getContacts: RequestHandler = catchAsync(
 
     const contacts = await User.findById(userId).select('contacts');
 
-    sendJsonResponse(res, 201, contacts);
+    sendJsonResponse(res, 200, contacts);
   }
 );

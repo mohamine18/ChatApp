@@ -4,11 +4,18 @@ type propsTypes = {
   children: React.ReactNode;
 };
 
+type User = {
+  _id: string;
+  firstName: string;
+  lastName: string;
+};
+
 type mainContextType = {
   isLoggedIn: boolean;
-  user: null;
+  user: User | null;
   login: (token: string, fetchedUser: any) => void;
   logout: () => void;
+  token: string | null;
 };
 
 export const MainContext = React.createContext<mainContextType>({
@@ -16,20 +23,23 @@ export const MainContext = React.createContext<mainContextType>({
   user: null,
   login: () => {},
   logout: () => {},
+  token: "",
 });
 
 const MainContextProvider = (props: propsTypes) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
+  const [token, setToken] = useState("");
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user") || "null");
-    console.log(storedUser);
+    const token = localStorage.getItem("token");
 
-    if (storedUser && storedUser.isLoggedIn) {
+    if (storedUser && storedUser.isLoggedIn && token) {
       setIsLoggedIn(true);
       setUser(storedUser.user);
+      setToken(token);
     }
     setIsLoaded(true);
   }, []);
@@ -46,12 +56,14 @@ const MainContextProvider = (props: propsTypes) => {
 
   const logout = () => {
     localStorage.removeItem("user");
+    localStorage.removeItem("token");
     setIsLoggedIn(false);
     setUser(null);
+    setToken("");
   };
 
   return (
-    <MainContext.Provider value={{ isLoggedIn, login, logout, user }}>
+    <MainContext.Provider value={{ isLoggedIn, login, logout, user, token }}>
       {isLoaded && props.children}
     </MainContext.Provider>
   );

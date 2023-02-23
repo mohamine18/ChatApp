@@ -79,3 +79,36 @@ export const addMessage: RequestHandler = catchAsync(
     sendJsonResponse(res, 201, newMessage);
   }
 );
+
+export const getContactLastMessages: RequestHandler = catchAsync(
+  async (req: IRequest, res, next) => {
+    const { contactId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(contactId))
+      return next(new AppError('please provide a valid user id', 400));
+
+    const currentUserId = req.user!._id;
+
+    const lastMessage = await Message.find({
+      sender: currentUserId,
+      recipient: contactId,
+    })
+      .sort({ timestamp: -1 })
+      .limit(1)
+      .select('text timestamp');
+
+    const unreadMessages = await Message.find({
+      sender: currentUserId,
+      recipient: contactId,
+      status: 'unread',
+    }).count();
+
+    const info = {
+      lastMessage: lastMessage[0]?.text || null,
+      timestamp: lastMessage[0]?.timestamp || null,
+      unreadMessages,
+    };
+    console.log(info);
+    sendJsonResponse(res, 200, info);
+  }
+);

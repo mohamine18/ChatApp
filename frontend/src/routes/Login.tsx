@@ -24,7 +24,7 @@ import Stack from "@mui/material/Stack";
 import theme from "../theme/Theme";
 
 // Utils imports
-import { loginFn } from "../utils/authUtilities";
+import { loginFn } from "../utils/authFetch";
 
 // context imports
 import { MainContext } from "../context/MainContext";

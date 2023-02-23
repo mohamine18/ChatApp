@@ -26,7 +26,7 @@ import Alert from "@mui/material/Alert";
 import theme from "../theme/Theme";
 
 // Utils import
-import { singUpFn } from "../utils/authUtilities";
+import { singUpFn } from "../utils/authFetch";
 
 // Context Import
 import { MainContext } from "../context/MainContext";
