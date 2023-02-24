@@ -17,6 +17,7 @@ import { ConversationContext } from "../../context/conversationContext";
 
 // Utils imports
 import { getConversationInfo } from "../../utils/messageFetch";
+import timeText from "../../utils/timeText";
 
 type propsType = {
   contact: { userId: string; fullName: string; email: string; _id: string };
@@ -31,6 +32,7 @@ type conversationInfoType = {
 const ContactInfo = (props: propsType) => {
   const [unread, setUnread] = useState(true);
   const [time, setTime] = useState("");
+  const [subheader, setSubheader] = useState("");
   const theme = useTheme();
 
   const { token } = useContext(MainContext);
@@ -44,12 +46,12 @@ const ContactInfo = (props: propsType) => {
         setUnread(false);
       }
       if (data.data.timestamp !== null) {
-        const date = new Date(data.data.timestamp);
-        const time = date.toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        });
-        setTime(time);
+        const { dateDifferenceString } = timeText(data.data.timestamp);
+
+        setTime(dateDifferenceString);
+      }
+      if (data.data.lastMessage !== null) {
+        setSubheader(`${data.data.lastMessage.substring(0, 35)}...`);
       }
     },
   });
@@ -105,7 +107,7 @@ const ContactInfo = (props: propsType) => {
                   </Box>
                 }
                 title={props.contact.fullName}
-                subheader={conversationInfoQuery.data.data.lastMessage || ""}
+                subheader={subheader}
               ></CardHeader>
             </Card>
           </CardActionArea>

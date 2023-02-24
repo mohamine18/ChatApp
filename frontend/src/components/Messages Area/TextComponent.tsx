@@ -1,22 +1,23 @@
+// MUI imports
 import { Avatar, Box, TextField, Typography, useTheme } from "@mui/material";
+
+// utils imports
+import timeText from "../../utils/timeText";
+
 type propsType = {
   text: string;
   isMine: boolean;
   time: string;
 };
+
 const TextComponent = (props: propsType) => {
   const theme = useTheme();
-  const date = new Date(props.time);
-  const time = date.toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  const { time, isToday, dateDifferenceString } = timeText(props.time);
   return (
     <Box
       alignSelf={props.isMine ? "flex-end" : "flex-start"}
       sx={{
-        maxWidth: "80%",
-        wordBreak: "break-all",
+        maxWidth: "90%",
         p: 0.5,
         display: "flex",
         alignItems: "center",
@@ -32,7 +33,9 @@ const TextComponent = (props: propsType) => {
       <Box
         component="div"
         sx={{
-          bgcolor: `${theme.palette.primary.main}`,
+          bgcolor: props.isMine
+            ? `${theme.palette.primary.main}`
+            : `${theme.palette.secondary.main}`,
           marginX: "5px",
           color: "white",
           borderRadius: "10px",
