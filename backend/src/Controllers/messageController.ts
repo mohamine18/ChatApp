@@ -42,9 +42,11 @@ export const getMessages: RequestHandler = catchAsync(
     if (!userId) return next(new AppError('user not found', 4044));
 
     const conversation = await Message.find({
-      recipient: userId,
-      sender: req.user!._id,
-    }).sort({ timestamp: -1 });
+      $or: [
+        { sender: req.user!._id, recipient: userId },
+        { sender: userId, recipient: req.user!._id },
+      ],
+    }).sort({ timestamp: 1 });
 
     sendJsonResponse(res, 200, conversation);
   }
@@ -90,16 +92,20 @@ export const getContactLastMessages: RequestHandler = catchAsync(
     const currentUserId = req.user!._id;
 
     const lastMessage = await Message.find({
-      sender: currentUserId,
-      recipient: contactId,
+      $or: [
+        { sender: currentUserId, recipient: contactId },
+        { sender: contactId, recipient: currentUserId },
+      ],
     })
       .sort({ timestamp: -1 })
       .limit(1)
       .select('text timestamp');
 
     const unreadMessages = await Message.find({
-      sender: currentUserId,
-      recipient: contactId,
+      $or: [
+        { sender: currentUserId, recipient: contactId },
+        { sender: contactId, recipient: currentUserId },
+      ],
       status: 'unread',
     }).count();
 
