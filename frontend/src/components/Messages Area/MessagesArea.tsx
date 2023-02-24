@@ -1,25 +1,55 @@
-import {
-  useTheme,
-  Box,
-  TextField,
-  Icon,
-  IconButton,
-  Button,
-} from "@mui/material";
+// modules imports
+import { useContext, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+
+// MUI imports
+import { Box } from "@mui/material";
+
+// components import
 import InputArea from "./InputArea";
 import TextComponent from "./TextComponent";
 
-type propsType = {
-  show: boolean;
+// context import
+import { MainContext } from "../../context/MainContext";
+import { ConversationContext } from "../../context/conversationContext";
+
+// utils import
+
+import { getConversation } from "../../utils/messageFetch";
+
+type propsType = {};
+
+type ConversationType = {
+  _id: string;
+  recipient: string;
+  sender: string;
+  status: string;
+  text: string;
+  timestamp: string;
 };
 
 const MessagesArea = (props: propsType) => {
-  const theme = useTheme();
+  const [conversation, setConversation] = useState([]);
+  const { user, token } = useContext(MainContext);
+  const { showArea, recipientId } = useContext(ConversationContext);
+
+  const conversationQuery = useQuery({
+    queryKey: ["conversation", user?._id, recipientId],
+    queryFn: () => {
+      if (showArea) return getConversation(token!, recipientId);
+      else return null;
+    },
+
+    onSuccess: (data) => {
+      if (data !== null) setConversation(data.data);
+    },
+  });
+
   return (
     <Box
       component="div"
       display={{
-        xs: props.show ? "flex" : "none",
+        xs: showArea ? "flex" : "none",
         md: "flex",
         lg: "flex",
       }}
@@ -35,21 +65,31 @@ const MessagesArea = (props: propsType) => {
         overflowY: { md: "auto" },
       }}
     >
-      <Box
-        component="div"
-        sx={{
-          borderRadius: "5px",
-          // border: `1px solid ${theme.palette.primary.main}`,
-          display: "flex",
-          height: "88%",
-          flexDirection: "column",
-          justifyContent: "flex-end",
-        }}
-      >
-        <TextComponent text="hello world from me" isMine={false} />
-        <TextComponent text="hello world from me" isMine={true} />
-      </Box>
-      <InputArea />
+      {showArea && (
+        <>
+          <Box
+            component="div"
+            sx={{
+              borderRadius: "5px",
+              // border: `1px solid ${theme.palette.primary.main}`,
+              display: "flex",
+              height: "88%",
+              flexDirection: "column",
+              justifyContent: "flex-end",
+            }}
+          >
+            {conversation.map((elem: ConversationType) => (
+              <TextComponent
+                text={elem.text}
+                isMine={elem.sender === user?._id ? true : false}
+                time={elem.timestamp}
+                key={elem._id}
+              />
+            ))}
+          </Box>
+          <InputArea />
+        </>
+      )}
     </Box>
   );
 };

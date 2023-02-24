@@ -15,18 +15,7 @@ import ResetPassword from "./routes/ResetPassword";
 import "./main.module.css";
 
 import MainContextProvider from "./context/MainContext";
-
-// const router = createBrowserRouter(
-//   createRoutesFromElements(
-//     <Route path="/" errorElement={<ErrorPage />}>
-//       <Route path="/" element={<Home />} />
-//       <Route path="login" element={<Login />} />
-//       <Route path="sign-up" element={<SignUp />} />
-//       <Route path="forgot-password" element={<ForgotPassword />} />
-//       <Route path="reset-password" element={<ResetPassword />} />
-//     </Route>
-//   )
-// );
+import ConversationContextProvider from "./context/conversationContext";
 
 const queryClient = new QueryClient();
 
@@ -36,7 +25,14 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
       <MainContextProvider>
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route
+              path="/"
+              element={
+                <ConversationContextProvider>
+                  <Home />{" "}
+                </ConversationContextProvider>
+              }
+            />
             <Route path="login" element={<Login />} />
             <Route path="sign-up" element={<SignUp />} />
             <Route path="forgot-password" element={<ForgotPassword />} />

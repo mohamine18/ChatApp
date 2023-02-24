@@ -2,9 +2,15 @@ import { Avatar, Box, TextField, Typography, useTheme } from "@mui/material";
 type propsType = {
   text: string;
   isMine: boolean;
+  time: string;
 };
 const TextComponent = (props: propsType) => {
   const theme = useTheme();
+  const date = new Date(props.time);
+  const time = date.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
   return (
     <Box
       alignSelf={props.isMine ? "flex-end" : "flex-start"}
@@ -20,7 +26,7 @@ const TextComponent = (props: propsType) => {
       {!props.isMine && <Avatar></Avatar>}
       {props.isMine && (
         <Typography component="span" variant="caption">
-          18:00
+          {time}
         </Typography>
       )}
       <Box
@@ -38,7 +44,7 @@ const TextComponent = (props: propsType) => {
       </Box>
       {!props.isMine && (
         <Typography component="span" variant="caption">
-          18:00
+          {time}
         </Typography>
       )}
       {props.isMine && <Avatar></Avatar>}

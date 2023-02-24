@@ -1,10 +1,23 @@
+// modules imports
+import { useContext } from "react";
+
+// MUI imports
 import { Icon, IconButton, Toolbar, Typography } from "@mui/material";
+
+// Components import
 import SearchBar from "../App Bar/SearchBar";
+
+// context imports
+import { ConversationContext } from "../../context/conversationContext";
 
 type propsType = {
   name: string;
 };
 const AreaBarElement = (props: propsType) => {
+  const { clearRecipient } = useContext(ConversationContext);
+  const handleBackButton = () => {
+    clearRecipient();
+  };
   return (
     <Toolbar>
       <IconButton
@@ -12,10 +25,19 @@ const AreaBarElement = (props: propsType) => {
         edge="start"
         color="inherit"
         aria-label="open drawer"
-        sx={{ mr: 2 }}
+        sx={{ mr: 2, display: { xs: "none", sm: "none", md: "block" } }}
       >
-        <Icon sx={{ display: { xs: "none", sm: "block" } }}>menu</Icon>
-        <Icon sx={{ display: { xs: "block", sm: "none" } }}>arrow_back</Icon>
+        <Icon>menu</Icon>
+      </IconButton>
+      <IconButton
+        size="large"
+        edge="start"
+        color="inherit"
+        aria-label="open drawer"
+        sx={{ display: { xs: "block", sm: "block", md: "none" } }}
+        onClick={handleBackButton}
+      >
+        <Icon>arrow_back</Icon>
       </IconButton>
       <Typography
         variant="h6"

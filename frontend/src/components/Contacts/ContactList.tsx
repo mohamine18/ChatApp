@@ -1,5 +1,5 @@
 // modules imports
-import { useContext } from "react";
+import { useContext, Dispatch } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 // MUI imports
@@ -11,14 +11,12 @@ import ContactInfo from "./ContactInfo";
 
 // context import
 import { MainContext } from "../../context/MainContext";
+import { ConversationContext } from "../../context/conversationContext";
 
 // utils imports
 import { getContacts } from "../../utils/contactFetch";
-import { flexbox } from "@mui/system";
 
-type propsType = {
-  show: boolean;
-};
+type propsType = {};
 
 type contactType = {
   userId: string;
@@ -29,6 +27,7 @@ type contactType = {
 
 const ContactList = (props: propsType) => {
   const { token } = useContext(MainContext);
+  const { showArea } = useContext(ConversationContext);
   const contactsQuery = useQuery({
     queryKey: ["contacts", token],
     queryFn: () => getContacts(token!),
@@ -37,7 +36,11 @@ const ContactList = (props: propsType) => {
   return (
     <Box
       component="div"
-      display={{ xs: props.show ? "block" : "none", md: "block", lg: "block" }}
+      display={{
+        xs: !showArea ? "block" : "none",
+        md: "block",
+        lg: "block",
+      }}
       sx={{
         width: { xs: "100%", sm: "100%", md: "40%" },
         height: "90vh",

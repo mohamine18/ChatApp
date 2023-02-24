@@ -14,7 +14,6 @@ import ChatAppBar from "../components/App Bar/ChatAppBar";
 import { MainContext } from "../context/MainContext";
 
 const App = () => {
-  const [showArea, setShowArea] = useState(false);
   const authContext = useContext(MainContext);
   return (
     <>
@@ -22,10 +21,10 @@ const App = () => {
         <ThemeProvider theme={theme}>
           <Container component="main" maxWidth="lg" disableGutters={true}>
             <CssBaseline />
-            <ChatAppBar show={showArea} />
+            <ChatAppBar />
             <Box component="div" sx={{ display: "flex" }}>
-              <ContactList show={!showArea} />
-              <MessagesArea show={showArea} />
+              <ContactList />
+              <MessagesArea />
             </Box>
           </Container>
         </ThemeProvider>
