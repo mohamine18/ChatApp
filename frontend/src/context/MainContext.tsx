@@ -48,6 +48,7 @@ const MainContextProvider = (props: propsTypes) => {
     localStorage.setItem("token", token);
     setIsLoggedIn(true);
     setUser(fetchedUser);
+    setToken(token);
     localStorage.setItem(
       "user",
       JSON.stringify({ isLoggedIn: true, user: fetchedUser })

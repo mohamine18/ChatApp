@@ -1,61 +1,58 @@
-import { styled, alpha, InputBase, Icon } from "@mui/material";
+// modules import
+import React, { useState, useContext } from "react";
+import { useQuery } from "@tanstack/react-query";
+
+// MUI imports
+import { Autocomplete, TextField } from "@mui/material";
+
+// Context imports
+import { MainContext } from "../../context/MainContext";
+
+// utils import
+
+import { searchContacts } from "../../utils/contactFetch";
 
 type propsType = {
   section: string;
 };
 
 const SearchBar = (props: propsType) => {
-  const Search = styled("div")(({ theme }) => ({
-    position: "relative",
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: alpha(theme.palette.common.white, 0.15),
-    "&:hover": {
-      backgroundColor: alpha(theme.palette.common.white, 0.25),
-    },
-    marginLeft: 0,
-    width: "100%",
-    [theme.breakpoints.up("sm")]: {
-      marginLeft: theme.spacing(1),
-      width: "auto",
-    },
-  }));
+  const [options, setoptions] = useState([]);
+  const [searchText, setSearchText] = useState("");
 
-  const SearchIconWrapper = styled("div")(({ theme }) => ({
-    padding: theme.spacing(0, 2),
-    height: "100%",
-    position: "absolute",
-    pointerEvents: "none",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  }));
+  const { token } = useContext(MainContext);
 
-  const StyledInputBase = styled(InputBase)(({ theme }) => ({
-    color: "inherit",
-    "& .MuiInputBase-input": {
-      padding: theme.spacing(1, 1, 1, 0),
-      // vertical padding + font size from searchIcon
-      paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-      transition: theme.transitions.create("width"),
-      width: "100%",
-      [theme.breakpoints.up("sm")]: {
-        width: "20ch",
-        "&:focus": {
-          width: "25ch",
-        },
-      },
+  const searchQuery = useQuery({
+    queryKey: ["search", token],
+    queryFn: () => searchContacts(searchText, token!),
+    onSuccess: (data) => {
+      setoptions(data.data);
+      console.log(options);
     },
-  }));
+  });
+
+  const autoCompleteHandler = (event: any, newInputValue: string) => {
+    setSearchText(newInputValue);
+  };
+
   return (
-    <Search>
-      <SearchIconWrapper>
-        <Icon>search</Icon>
-      </SearchIconWrapper>
-      <StyledInputBase
-        placeholder={`Search ${props.section}`}
-        inputProps={{ "aria-label": "search" }}
-      />
-    </Search>
+    <Autocomplete
+      size="small"
+      sx={{ width: "300px" }}
+      id={`autocomplete_search_${props.section}`}
+      options={options}
+      clearOnBlur={true}
+      noOptionsText={`no ${props.section} found`}
+      filterOptions={(x) => x}
+      onInputChange={autoCompleteHandler}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label={`search ${props.section}`}
+          color="secondary"
+        />
+      )}
+    />
   );
 };
 

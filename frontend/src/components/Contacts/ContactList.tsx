@@ -26,7 +26,7 @@ type contactType = {
 };
 
 const ContactList = (props: propsType) => {
-  const { token } = useContext(MainContext);
+  const { token, isLoggedIn } = useContext(MainContext);
   const { showArea } = useContext(ConversationContext);
   const contactsQuery = useQuery({
     queryKey: ["contacts", token],
@@ -59,7 +59,7 @@ const ContactList = (props: propsType) => {
           <CircularProgress color="primary" />
         </Box>
       )}
-      {!contactsQuery.isLoading &&
+      {contactsQuery.isSuccess &&
         contactsQuery.data.data.contacts.map((contact: contactType) => (
           <ContactInfo contact={contact} key={contact._id}></ContactInfo>
         ))}

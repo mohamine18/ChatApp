@@ -29,7 +29,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
               path="/"
               element={
                 <ConversationContextProvider>
-                  <Home />{" "}
+                  <Home />
                 </ConversationContextProvider>
               }
             />

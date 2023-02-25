@@ -35,7 +35,7 @@ export default (timestamp: string): dateTypes => {
   const diff = Math.floor((utc2 - utc1) / MS_PER_DAY);
 
   let dateDifferenceString;
-  if (diff === 0) dateDifferenceString = "Today";
+  if (diff === 0) dateDifferenceString = `  Today  `;
   else if (diff === 1) dateDifferenceString = "Yesterday";
   else if (diff > 1 && diff <= 3) dateDifferenceString = `${diff} days ago`;
   else dateDifferenceString = localDate1;

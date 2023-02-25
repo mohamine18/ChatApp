@@ -19,7 +19,7 @@ import timeText from "../../utils/timeText";
 
 type propsType = {};
 
-type ConversationType = {
+export type ConversationType = {
   _id: string;
   recipient: string;
   sender: string;
@@ -29,7 +29,7 @@ type ConversationType = {
 };
 
 const MessagesArea = (props: propsType) => {
-  const [conversation, setConversation] = useState([]);
+  const [conversation, setConversation] = useState<ConversationType[]>([]);
   const { user, token } = useContext(MainContext);
   const { showArea, recipientId } = useContext(ConversationContext);
 
@@ -71,7 +71,6 @@ const MessagesArea = (props: propsType) => {
             component="div"
             sx={{
               borderRadius: "5px",
-              // border: `1px solid ${theme.palette.primary.main}`,
               display: "flex",
               height: "88%",
               flexDirection: "column",
@@ -87,7 +86,7 @@ const MessagesArea = (props: propsType) => {
               />
             ))}
           </Box>
-          <InputArea />
+          <InputArea setConversation={setConversation} />
         </>
       )}
     </Box>

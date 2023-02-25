@@ -33,3 +33,27 @@ export const getConversation = async (token: string, recipientId: string) => {
     throw Error("Failed to fetch the conversation");
   }
 };
+
+export const addMessage = async (
+  token: string,
+  data: { recipient: string; text: string }
+) => {
+  try {
+    const res = await fetch(
+      `http://${location.hostname}:3000/api/v1/conversation/add-message`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(data),
+      }
+    );
+    const requestData = await res.json();
+    return requestData;
+  } catch (error) {
+    console.log(error);
+    throw Error("Failed to add message");
+  }
+};
