@@ -47,7 +47,7 @@ const AreaBarElement = (props: propsType) => {
       >
         {props.name}
       </Typography>
-      <SearchBar section="conversation" />
+      {/* <SearchBar section="conversation" /> */}
     </Toolbar>
   );
 };

@@ -1,5 +1,5 @@
 // modules imports
-import { useContext, Dispatch } from "react";
+import { useContext, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 // MUI imports

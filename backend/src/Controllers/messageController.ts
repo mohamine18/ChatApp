@@ -114,7 +114,34 @@ export const getContactLastMessages: RequestHandler = catchAsync(
       timestamp: lastMessage[0]?.timestamp || null,
       unreadMessages,
     };
-    console.log(info);
     sendJsonResponse(res, 200, info);
+  }
+);
+
+export const makeMessageRead: RequestHandler = catchAsync(
+  async (req: IRequest, res, next) => {
+    const { recipient } = req.body;
+    const sender = req.user!._id;
+
+    if (!mongoose.Types.ObjectId.isValid(recipient))
+      return next(new AppError('please provide a valid user id', 400));
+
+    const unreadMessage = await Message.updateMany(
+      {
+        $or: [
+          { sender: sender, recipient: recipient },
+          { sender: recipient, recipient: sender },
+        ],
+        status: 'unread',
+      },
+      { status: 'read' }
+    );
+
+    const matchedCount = unreadMessage.matchedCount;
+    const modifiedCount = unreadMessage.modifiedCount;
+
+    console.log(matchedCount, modifiedCount);
+
+    sendJsonResponse(res, 204);
   }
 );

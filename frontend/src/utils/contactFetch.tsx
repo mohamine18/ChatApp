@@ -16,7 +16,10 @@ export const getContacts = async (token: string) => {
   }
 };
 
-export const searchContacts = async (searchText: string, token: string) => {
+export const searchContacts = async (
+  searchText: string | null,
+  token: string
+) => {
   try {
     const res = await fetch(
       `http://${location.hostname}:3000/api/v1/contact/list-of-contacts?q=${searchText}`,

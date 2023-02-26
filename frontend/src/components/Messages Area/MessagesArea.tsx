@@ -14,7 +14,11 @@ import { MainContext } from "../../context/MainContext";
 import { ConversationContext } from "../../context/conversationContext";
 
 // utils import
-import { getConversation } from "../../utils/messageFetch";
+import {
+  getConversation,
+  updateMessagesStatus,
+} from "../../utils/messageFetch";
+
 import timeText from "../../utils/timeText";
 
 type propsType = {};
