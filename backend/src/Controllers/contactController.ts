@@ -1,11 +1,13 @@
 // Modules imports
 import { RequestHandler, Response } from 'express';
+import mongoose from 'mongoose';
 
 // Utils imports
 import catchAsync from '../utils/catchAsync';
 
 // Schemas imports
 import User, { contactType } from '../models/userModel';
+import Message from '../models/messageModel';
 
 // Types import
 import { IRequest } from './authController';
@@ -13,7 +15,14 @@ import { IRequest } from './authController';
 // Utils imports
 import AppError from '../utils/appError';
 import HTTP_CODES from '../utils/httpCodes';
-import mongoose from 'mongoose';
+
+type contactsList = {
+  userId: string;
+  fullName: string;
+  email: string;
+  _id: string;
+  timestamp: Date;
+};
 
 const sendJsonResponse = (
   res: Response,
@@ -97,8 +106,37 @@ export const getContacts: RequestHandler = catchAsync(
   async (req: IRequest, res, next) => {
     const userId = req.user?._id;
 
-    const contacts = await User.findById(userId).select('contacts');
-
-    sendJsonResponse(res, 200, contacts);
+    const contacts = User.findById(userId).select('contacts').cursor();
+    let contactsListSorted: contactsList[] = [];
+    for (
+      let doc = await contacts.next();
+      doc !== null;
+      doc = await contacts.next()
+    ) {
+      if (doc.contacts != null) {
+        for (let elem of doc.contacts) {
+          const latestMessages = await Message.find({
+            $or: [
+              { sender: userId, recipient: elem.userId },
+              { sender: elem.userId, recipient: userId },
+            ],
+          })
+            .sort({ timestamp: -1 })
+            .limit(1);
+          let contact: contactsList = {
+            userId: elem.userId.toString(),
+            fullName: elem.fullName,
+            email: elem.email,
+            _id: elem._id!.toString(),
+            timestamp: latestMessages[0]?.timestamp || new Date(-1),
+          };
+          contactsListSorted.push(contact);
+        }
+      }
+    }
+    contactsListSorted.sort((a, b) =>
+      new Date(a.timestamp) < new Date(b.timestamp) ? 1 : -1
+    );
+    sendJsonResponse(res, 200, contactsListSorted);
   }
 );

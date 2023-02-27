@@ -6,6 +6,7 @@ export interface contactType {
   userId: mongoose.Types.ObjectId;
   fullName: string;
   email: string;
+  _id?: mongoose.Types.ObjectId;
 }
 
 export interface IUser {

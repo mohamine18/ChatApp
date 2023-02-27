@@ -60,7 +60,7 @@ const ContactList = (props: propsType) => {
         </Box>
       )}
       {contactsQuery.isSuccess &&
-        contactsQuery.data.data.contacts.map((contact: contactType) => (
+        contactsQuery.data.data.map((contact: contactType) => (
           <ContactInfo contact={contact} key={contact._id}></ContactInfo>
         ))}
     </Box>
