@@ -26,11 +26,13 @@ type contactType = {
 };
 
 const ContactList = (props: propsType) => {
-  const { token, isLoggedIn } = useContext(MainContext);
+  const { token } = useContext(MainContext);
   const { showArea } = useContext(ConversationContext);
   const contactsQuery = useQuery({
     queryKey: ["contacts", token],
     queryFn: () => getContacts(token!),
+    refetchInterval: 5 * 1000,
+    refetchIntervalInBackground: true,
   });
 
   return (

@@ -44,6 +44,8 @@ const ContactInfo = (props: propsType) => {
     onSuccess: (data) => {
       if (data.data.unreadMessages === 0) {
         setUnread(false);
+      } else {
+        setUnread(true);
       }
       if (data.data.timestamp !== null) {
         const { dateDifferenceString } = timeText(data.data.timestamp);
@@ -54,12 +56,13 @@ const ContactInfo = (props: propsType) => {
         setSubheader(`${data.data.lastMessage.substring(0, 35)}...`);
       }
     },
+    refetchInterval: 5 * 1000,
+    refetchIntervalInBackground: true,
   });
 
   const recipientHandler = () => {
     currentRecipient(props.contact.userId, props.contact.fullName);
   };
-
   return (
     <>
       {conversationInfoQuery.isSuccess ? (

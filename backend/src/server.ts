@@ -1,7 +1,14 @@
 import * as dotenv from 'dotenv';
-dotenv.config();
 import mongoose from 'mongoose';
 import app from './app';
+import socketServer from './socket';
+
+dotenv.config();
+
+const socketHandler = new socketServer();
+
+socketHandler.listenServer();
+socketHandler.connected();
 
 mongoose.set('strictQuery', true);
 mongoose
@@ -11,7 +18,7 @@ mongoose
 
 mongoose.connection.on('error', (error) => console.log(error));
 
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-  console.log(`server running on port ${port}`);
+const appPort = process.env.AAP_PORT || 3000;
+app.listen(appPort, () => {
+  console.log(`App server running on port ${appPort}`);
 });

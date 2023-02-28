@@ -60,7 +60,7 @@ export const addMessage = async (
 
 export const updateMessagesStatus = async (
   token: string,
-  data: { recipientId: string }
+  data: { recipient: string }
 ) => {
   try {
     const res = await fetch(
