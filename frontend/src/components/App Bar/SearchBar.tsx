@@ -76,7 +76,12 @@ const SearchBar = (props: propsType) => {
         <TextField
           {...params}
           label={`search ${props.section}`}
-          color="secondary"
+          variant="filled"
+          sx={{
+            "& label.Mui-focused": {
+              color: "white",
+            },
+          }}
         />
       )}
     />

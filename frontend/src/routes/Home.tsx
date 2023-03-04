@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useEffect, useContext } from "react";
 import { Navigate } from "react-router-dom";
 
 import { ThemeProvider } from "@mui/material";
@@ -15,6 +15,11 @@ import { MainContext } from "../context/MainContext";
 
 const App = () => {
   const authContext = useContext(MainContext);
+  useEffect(() => {
+    if (authContext.isLoggedIn) {
+      Notification.requestPermission();
+    }
+  }, []);
   return (
     <>
       {authContext.isLoggedIn ? (

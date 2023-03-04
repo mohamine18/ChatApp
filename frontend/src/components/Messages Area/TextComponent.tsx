@@ -1,5 +1,5 @@
 // MUI imports
-import { Avatar, Box, TextField, Typography, useTheme } from "@mui/material";
+import { Avatar, Box, Typography, useTheme } from "@mui/material";
 
 // utils imports
 import timeText from "../../utils/timeText";
@@ -12,7 +12,7 @@ type propsType = {
 
 const TextComponent = (props: propsType) => {
   const theme = useTheme();
-  const { time, isToday, dateDifferenceString } = timeText(props.time);
+  const { time } = timeText(props.time);
   return (
     <Box
       alignSelf={props.isMine ? "flex-end" : "flex-start"}

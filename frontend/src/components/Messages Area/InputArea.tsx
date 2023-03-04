@@ -1,5 +1,11 @@
 // modules import
-import { Dispatch, SetStateAction, useContext, useEffect } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import io from "socket.io-client";
 
@@ -29,8 +35,9 @@ type MessageData = {
 const socket = io(`http://${location.hostname}:3001`);
 
 const InputArea = (props: PropsType) => {
+  const [visible, setVisible] = useState(true);
   const { user, token } = useContext(MainContext);
-  const { recipientId } = useContext(ConversationContext);
+  const { recipientId, recipientName } = useContext(ConversationContext);
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -47,10 +54,9 @@ const InputArea = (props: PropsType) => {
       });
     });
 
-    // return () => {
-    //   socket.emit("leaveRoom", user?._id, recipientId);
-    //   socket.disconnect();
-    // };
+    return () => {
+      socket.emit("leaveRoom", user?._id, recipientId);
+    };
   }, [recipientId]);
 
   const readMessage = useQuery({
