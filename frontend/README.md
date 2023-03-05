@@ -1,10 +1,21 @@
-# The user interface of the chat app
+## The user interface of the Real-Time chat app
 
-more details will follow as soon as we build the app
+- This UI is built using react material design library [MUI](https://mui.com/)
+- For the app routing [TanStack Query](https://tanstack.com/query/latest/docs/react/overview) is used
 
-to add profile page
-to add push notification
-to add chat groups
-to add audio and video calls
+## The main sections we covered
 
-we need to configure error handling
+- SingUp page
+- Login page
+- Forgot Password Page
+- Reset Password page
+- home page that include two sections
+  - Search bar (search contacts by email)
+  - Contact list
+  - Messaging area
+
+## If time permits, the following pages and sections will be added to the app:
+
+- Profile page
+- Chat room preferences
+- Error handling (Error boundary is used to catch rendering errors but i'm talking about fetch errors and others)

@@ -21,6 +21,12 @@ const duplicateFieldDB = () => {
 const handleCastErrorDB = () => {
   return new AppError('Cast error. please try another value', 400);
 };
+const tokenError = () => {
+  return new AppError(
+    'invalid signature please provide a valid JWT token',
+    400
+  );
+};
 
 const sendErrorDev = (err: AppError, req: Request, res: Response) => {
   res.status(err.statusCode).json({
@@ -37,6 +43,7 @@ const sendErrorProd = (err: AppError, req: Request, res: Response) => {};
 
 const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   console.log(err);
+  if (err.name === 'JsonWebTokenError') err = tokenError();
   if (err.name === 'ZodError') err = validationError(err.issues);
   if (err instanceof mongoose.Error.ValidationError) err = ODMValidationError();
   if (err.code === 11000) err = duplicateFieldDB();

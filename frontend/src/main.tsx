@@ -6,16 +6,21 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 //Routes import
 import Home from "./routes/Home";
-import ErrorPage from "./ErrorPage";
+import ErrorPage from "./ErrorBoundary";
 import Login from "./routes/Login";
 import SignUp from "./routes/SignUp";
 import ForgotPassword from "./routes/ForgotPassword";
 import ResetPassword from "./routes/ResetPassword";
 
+// css
 import "./main.module.css";
 
+// context
 import MainContextProvider from "./context/MainContext";
 import ConversationContextProvider from "./context/conversationContext";
+
+// error boundary
+import ErrorBoundary from "./ErrorBoundary";
 
 const queryClient = new QueryClient();
 
@@ -29,7 +34,9 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
               path="/"
               element={
                 <ConversationContextProvider>
-                  <Home />
+                  <ErrorBoundary>
+                    <Home />
+                  </ErrorBoundary>
                 </ConversationContextProvider>
               }
             />

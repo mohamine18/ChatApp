@@ -22,6 +22,7 @@ import User, { IUser } from '../models/userModel';
 import AppError from '../utils/appError';
 import catchAsync from '../utils/catchAsync';
 import HTTP_CODES from '../utils/httpCodes';
+import { TypeOf } from 'zod';
 
 const signToken = (userId: string) => {
   return jwt.sign({ userId }, process.env.JWT_SECRET as Secret, {

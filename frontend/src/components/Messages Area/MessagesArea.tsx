@@ -20,6 +20,7 @@ import {
 } from "../../utils/messageFetch";
 
 import timeText from "../../utils/timeText";
+import ErrorBoundary from "../../ErrorBoundary";
 
 type propsType = {};
 
@@ -90,7 +91,9 @@ const MessagesArea = (props: propsType) => {
               />
             ))}
           </Box>
-          <InputArea setConversation={setConversation} />
+          <ErrorBoundary>
+            <InputArea setConversation={setConversation} />
+          </ErrorBoundary>
         </>
       )}
     </Box>

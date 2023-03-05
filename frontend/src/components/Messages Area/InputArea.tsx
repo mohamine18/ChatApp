@@ -84,6 +84,10 @@ const InputArea = (props: PropsType) => {
         queryKey: ["conversationInfo", token, recipientId],
       });
     },
+    // onError: (error, variables) => {
+    //   console.log(error);
+    // throw new Error({ message: error.message });
+    // },
   });
 
   const submitHandler = (event: React.FormEvent<HTMLFormElement>) => {
